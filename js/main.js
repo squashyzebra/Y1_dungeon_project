@@ -9,10 +9,13 @@ var tileRows = 32;
 var tileCols = 32;
 var tileMap;
 
+var player = makePlayer();
+
 canvas = document.getElementById('canvas');
 canvas.width = tileSize * tileCols;
 canvas.height = tileSize * tileRows;
 context = canvas.getContext('2d');
+
 
 
 //load tile map pieces
@@ -95,18 +98,79 @@ loadMax++;
 tileMap.loadTileAsset('water', 'images/water/water.png');
 loadMax++;
 
+//floor deco
+tileMap.loadTileAsset('barrel', 'images/barrel.png');
+loadMax++;
+tileMap.loadTileAsset('plateTable', 'images/plate_table.png');
+loadMax++;
+tileMap.loadTileAsset('scrollTable', 'images/scroll_table.png');
+loadMax++;
+tileMap.loadTileAsset('table', 'images/table.png');
+loadMax++;
+tileMap.loadTileAsset('waterBarrel', 'images/water_barrel.png');
+loadMax++;
 
+//player
+player.playerImage.addEventListener('load', loadHandler);
+loadMax++;
+player.playerImage.src = "images/player/player1.png";
+
+
+
+function addListeners(){
+    window.addEventListener("keyup", keyUpHandler);
+    window.addEventListener("keydown", keyDownHandler)
+
+    render();
+}
+
+function keyDownHandler(event){
+    if (event.keyCode == player.lKey) {
+        player.isLeft = true;
+      }
+      if (event.keyCode == player.rKey) {
+        player.isRight = true;
+      }
+      if (event.keyCode == player.fKey) {
+        player.isForward = true;
+      }
+      if (event.keyCode == player.bKey) {
+        player.isBackwards = true;
+      }
+}
+
+function keyUpHandler(event){
+    if (event.keyCode == player.lKey) {
+        player.isLeft = false;
+      }
+      if (event.keyCode == player.rKey) {
+        player.isRight = false;
+      }
+      if (event.keyCode == player.fKey) {
+        player.isForward = false;
+      }
+      if (event.keyCode == player.bKey) {
+        player.isBackwards = false;
+      }
+}
 
 function loadHandler() {
     if (++loadCount >= loadMax) {
         tileMap.createBasicMap();
         tileMap.createDecorationMap(); 
-        render();
+        addListeners();
+        
 
     }
 }
+
+
 function render() {
+
+    player.updatePos();
+
     tileMap.draw(context);
+    player.draw(context);
 
     
     requestAnimationFrame(render);
