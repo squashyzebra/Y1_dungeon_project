@@ -16,7 +16,7 @@ function makePlayer() {
 
 
     player.updatePos = function () {
-        if (tileMap.deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] != null) {
+        if (BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] != null) {
             this.speed = 1;
         } else {
             this.speed = 2;
@@ -52,11 +52,11 @@ function makePlayer() {
             this.y = tileCols * tileSize - tileSize - tileSize / 2;
         }
         //obstacles
-        if (tileMap.deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'table' ||
-            tileMap.deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'scrollTable' ||
-            tileMap.deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'plateTable' ||
-            tileMap.deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'barrel' ||
-            tileMap.deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'waterBarrel') {
+        if (BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'table' ||
+            BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'scrollTable' ||
+            BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'plateTable' ||
+            BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'barrel' ||
+            BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'waterBarrel') {
             if(this.isRight){
                 this.x -= 2;
             }
