@@ -40,16 +40,16 @@ function makePlayer() {
             this.x = tileSize + tileSize / 2;
         }
         //right wall
-        if (this.x + tileSize / 2 > tileCols * tileSize - tileSize) {
-            this.x = tileCols * tileSize - tileSize - tileSize / 2;
+        if (this.x + tileSize / 2 > BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols * tileSize - tileSize) {
+            this.x = BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols * tileSize - tileSize - tileSize / 2;
         }
         //top wall
         if (this.y - tileSize / 2 < tileSize) {
             this.y = tileSize + tileSize / 2;
         }
         //bottom wall
-        if (this.y + tileSize / 2 > tileCols * tileSize - tileSize) {
-            this.y = tileCols * tileSize - tileSize - tileSize / 2;
+        if (this.y + tileSize / 2 > BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols * tileSize - tileSize) {
+            this.y = BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols * tileSize - tileSize - tileSize / 2;
         }
         //obstacles
         if (BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'table' ||
@@ -57,23 +57,100 @@ function makePlayer() {
             BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'plateTable' ||
             BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'barrel' ||
             BigMap.rooms[BigMap.currentRow][BigMap.currentCol].deco[(((Math.floor(player.y / tileSize)) * tileCols) + (Math.floor(player.x / tileSize)))] == 'waterBarrel') {
-            if(this.isRight){
+            if (this.isRight) {
                 this.x -= 2;
             }
-            if(this.isLeft){
+            if (this.isLeft) {
                 this.x += 2;
             }
-            if(this.isForward){
-                
+            if (this.isForward) {
+
                 this.y += 2;
             }
-            if(this.isBackwards){
+            if (this.isBackwards) {
                 this.y -= 2;
             }
-                    
+
+        }
+
+
+
+
+
+
+    }
+    player.changeRoom = function (cvs) {
+
+
+
+        //for normal room
+
+        //top door
+        if (BigMap.rooms[BigMap.currentRow][BigMap.currentCol].map[(((Math.floor((player.y - 9) / tileSize)) * BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols) + + (Math.floor(player.x / tileSize)))] == 'td' && player.y > tileSize) {
+            
+            if (BigMap.rooms[ BigMap.currentRow - 1][BigMap.currentCols] == 'br corner') {
+                BigMap.currentRow -= 1;
+                BigMap.currentCol -= 1;
+                player.y = cvs.height - 30;
+                player.x = cvs.width * (2 / 3);
+            } else if (BigMap.rooms[BigMap.currentRow - 1][BigMap.currentCols].type == "2x2") {
+                BigMap.currentRow -= 1;
+                player.y = cvs.height - 30;
+                player.x = cvs.width * (1 / 3);
+            } else {
+                BigMap.currentRow -= 1;
+                player.y = cvs.height - 30;
             }
+        } else if (BigMap.rooms[BigMap.currentRow][BigMap.currentCol].map[(((Math.floor((player.y + 9) / tileSize)) * BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols) + (Math.floor(player.x / tileSize)))] == 'td') {
+            //bottom door
+            if (BigMap.rooms[BigMap.currentRow + 1][BigMap.currentCols] == 'tl corner') {
+                BigMap.currentRow += 2;
+                player.y = 30;
+                player.x = cvs.width * (1 / 3);
+            }else if (BigMap.rooms[BigMap.currentRow + 1][BigMap.currentCols] == 'tr corner') {
+                BigMap.currentRow += 2;
+                BigMap.currentCol -= 1;
+                player.y = 30;
+                player.x = cvs.width * (2 / 3);
+            }else{
+            BigMap.currentRow += 1;
+            player.y = 30;
+            }
+        }
+        //right door
+        if (BigMap.rooms[BigMap.currentRow][BigMap.currentCol].map[(((Math.floor(player.y / tileSize)) * BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols) + (Math.floor((player.x + 9) / tileSize)))] == 'rd') {
+            if (BigMap.rooms[BigMap.currentRow][BigMap.currentCols+1] == 'tl corner') {
+                BigMap.currentCol += 1;
+                BigMap.currentRow += 1;
+                player.x = 30;
+                player.y = cvs.height * (1 / 3);
+            }else if (BigMap.rooms[BigMap.currentRow][BigMap.currentCols+1].type == "2x2") {
+                BigMap.currentCol += 1;
+                player.x = 30;
+                player.y = cvs.height * (2 / 3);
+            }else{
+            BigMap.currentCol += 1;
+            player.x = 30;
+            }
+        }
+        //left door
+        if (BigMap.rooms[BigMap.currentRow][BigMap.currentCol].map[(((Math.floor(player.y / tileSize)) * BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols) + (Math.floor((player.x - 9) / tileSize)))] == 'ld') {
+            if (BigMap.rooms[BigMap.currentRow][BigMap.currentCols-1] == 'tr corner') {
+                BigMap.currentCol -= 2;
+                BigMap.currentRow += 1;
+                player.x = cvs.width - 30;
+                player.y = cvs.height * (1 / 3);
+            }else if (BigMap.rooms[BigMap.currentRow][BigMap.currentCols-1]== 'br corner') {
+                BigMap.currentCol -= 2;
+                player.x = cvs.width - 30;
+                player.y = cvs.height * (2 / 3);
+            }else{
+            BigMap.currentCol -= 1;
+            player.x = cvs.width - 30;
+            }
+        }
 
-
+        //for 2x2 room
 
 
 

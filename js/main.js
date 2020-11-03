@@ -5,6 +5,8 @@ var loadCount = 0;
 var loadMax = 0;
 var tileSize = 16;
 
+var miniMapShow = false;
+
 var tileRows = 32;
 var tileCols = 32;
 var tileMap;
@@ -25,11 +27,11 @@ context = canvas.getContext('2d');
 
 //load tile map pieces
 
-tileMap = makeTileMap();
+tileMap = makeTileMap('normal');
 for (var i = 0; i < BigMap.mapRows; i++) {
   for (var j = 0; j < BigMap.mapCols; j++) {
-    if (BigMap.rooms[i][j] != '') {
-      
+    if (BigMap.rooms[i][j] instanceof Object) {
+
       BigMap.rooms[i][j].loadTileAsset('blf', 'images/bl_floor.png');
       loadMax++;
       BigMap.rooms[i][j].loadTileAsset('blw', 'images/bl_wall.png');
@@ -149,6 +151,9 @@ function keyDownHandler(event) {
   if (event.keyCode == player.bKey) {
     player.isBackwards = true;
   }
+  if (event.keyCode == 32) {
+    miniMapShow = true
+  }
 }
 
 function keyUpHandler(event) {
@@ -164,6 +169,9 @@ function keyUpHandler(event) {
   if (event.keyCode == player.bKey) {
     player.isBackwards = false;
   }
+  if (event.keyCode == 32) {
+    miniMapShow = false
+  }
 }
 
 function loadHandler() {
@@ -172,13 +180,13 @@ function loadHandler() {
 
     for (var i = 0; i < BigMap.mapRows - 1; i++) {
       for (var j = 0; j < BigMap.mapCols - 1; j++) {
-        if(BigMap.rooms[i][j] != ''){
-        BigMap.rooms[i][j].createBasicMap();
-        BigMap.rooms[i][j].createDecorationMap();
+        if (BigMap.rooms[i][j] instanceof Object) {
+          BigMap.rooms[i][j].createBasicMap();
+          BigMap.rooms[i][j].createDecorationMap();
         }
       }
     }
-    BigMap.MiniMap();
+
     // BigMap.rooms[i][j].createBasicMap();
     // BigMap.rooms[i][j].createDecorationMap(); 
     addListeners();
@@ -191,12 +199,16 @@ function loadHandler() {
 function render() {
 
   player.updatePos();
+  player.changeRoom(canvas);
+  canvas.width = BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileCols * tileSize;
+  canvas.height = BigMap.rooms[BigMap.currentRow][BigMap.currentCol].tileRows * tileSize;
+  BigMap.rooms[BigMap.currentRow][BigMap.currentCol].createBasicMap();
 
-  var row = BigMap.currentRow;
-  var col = BigMap.currentCol;
-  BigMap.rooms[row][col].draw(context);
+  BigMap.rooms[BigMap.currentRow][BigMap.currentCol].draw(context);
   player.draw(context);
-
-
+  BigMap.CheckBeenAndSeen();
+  if (miniMapShow) {
+    BigMap.MiniMap(context);
+  }
   requestAnimationFrame(render);
 }
